@@ -1,11 +1,2234 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>我的名片</title>
-  <meta charset-"utf-8>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="郭恒言的个人主页与数字空间" />
+  <title>郭恒言 · 个人空间</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://fastly.jsdelivr.net/npm/cnchar/cnchar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lunar@2.0.0/dist/lunar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/3metaJun/3meta@main/dist/3meta.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --bg-2: #111114;
+      --card: rgba(22, 22, 26, 0.6);
+      --card-solid: #16161a;
+      --text: #f5f5f7;
+      --text-2: #b8b8bf;
+      --muted: #73737a;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-2: rgba(255, 255, 255, 0.14);
+      --accent: #f0b429;
+      --accent-2: #ffc94d;
+      --accent-soft: rgba(240, 180, 41, 0.12);
+      --accent-glow: rgba(240, 180, 41, 0.25);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --radius: 22px;
+      --radius-sm: 14px;
+      --radius-lg: 30px;
+      --success: #22c55e;
+      --danger: #ef4444;
+    }
+
+    body.light {
+      --bg: #f7f5f0;
+      --bg-2: #ffffff;
+      --card: rgba(255, 255, 255, 0.72);
+      --card-solid: #ffffff;
+      --text: #17171a;
+      --text-2: #444448;
+      --muted: #82828a;
+      --line: rgba(0, 0, 0, 0.08);
+      --line-2: rgba(0, 0, 0, 0.14);
+      --accent: #b8730a;
+      --accent-2: #d68f18;
+      --accent-soft: rgba(184, 115, 10, 0.1);
+      --accent-glow: rgba(184, 115, 10, 0.2);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+      --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.7;
+      transition: background .4s ease, color .4s ease;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(600px circle at 12% 8%, var(--accent-soft), transparent 45%),
+        radial-gradient(700px circle at 88% 18%, rgba(109, 93, 252, 0.07), transparent 45%),
+        radial-gradient(600px circle at 50% 95%, rgba(57, 189, 255, 0.05), transparent 45%);
+      animation: floatBg 24s ease-in-out infinite alternate;
+    }
+    @keyframes floatBg {
+      0%   { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(-20px, 20px, 0) scale(1.08); }
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+    /* ============ 顶部导航 ============ */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      background: color-mix(in srgb, var(--bg) 70%, transparent);
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s ease, background .3s ease;
+    }
+    .topbar.scrolled { border-bottom-color: var(--line); }
+    .nav {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+      letter-spacing: .3px;
+      font-size: 15px;
+    }
+    .brand-mark {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 13px;
+      color: #0a0a0b;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 20px var(--accent-glow);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .nav-links { display: flex; gap: 4px; align-items: center; }
+    .nav-links a, .icon-btn {
+      border: 0; background: transparent; color: var(--muted);
+      border-radius: 10px; padding: 8px 12px;
+      font-size: 14px; font-weight: 500;
+      transition: color .2s ease, background .2s ease;
+      white-space: nowrap;
+    }
+    .nav-links a:hover, .icon-btn:hover { color: var(--text); background: var(--line); }
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; padding: 0; font-size: 16px;
+    }
+    .icon-btn.unlocked {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    /* ============ Hero ============ */
+    .hero { padding: 48px 0 20px; }
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      padding: 56px 48px;
+      background:
+        linear-gradient(135deg, var(--accent-soft), transparent 60%),
+        var(--card);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid var(--line-2);
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 480px; height: 480px;
+      right: -160px; top: -220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-glow), transparent 65%);
+      filter: blur(20px);
+      z-index: -1;
+      animation: heroGlow 12s ease-in-out infinite alternate;
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at top right, black 10%, transparent 60%);
+      -webkit-mask-image: radial-gradient(ellipse at top right, black 10%, transparent 60%);
+      opacity: .5;
+    }
+    @keyframes heroGlow {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-30px, 30px) scale(1.1); }
+    }
+    .hero-grid {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 40px;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 12.5px; font-weight: 500;
+      color: var(--text-2);
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--line);
+      border: 1px solid var(--line-2);
+      margin-bottom: 22px;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+      letter-spacing: .5px;
+    }
+    .eyebrow .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+    .hero h1 {
+      margin: 0 0 20px;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      font-weight: 700;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+    }
+    .hero h1 .accent {
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      max-width: 560px;
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--text-2);
+    }
+    .motto {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--accent);
+      font-style: italic;
+      letter-spacing: .3px;
+      opacity: .9;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+    .motto:empty { display: none; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform .2s ease, box-shadow .25s ease, background .2s ease, color .2s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      color: #0a0a0b;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 28px var(--accent-glow);
+    }
+    .btn-primary:hover { box-shadow: 0 14px 36px var(--accent-glow); }
+    .btn-ghost {
+      color: var(--text);
+      background: var(--line);
+      border: 1px solid var(--line-2);
+    }
+    .btn-ghost:hover { background: var(--line-2); }
+    .btn-sm { padding: 8px 14px; font-size: 13px; border-radius: 10px; }
+
+    .avatar {
+      position: relative;
+      width: 148px; height: 148px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 46px; font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent);
+      background:
+        radial-gradient(circle at 30% 30%, var(--accent-soft), transparent 70%),
+        var(--card-solid);
+      border: 1.5px solid var(--accent);
+      box-shadow:
+        0 0 60px var(--accent-glow),
+        inset 0 0 40px var(--accent-soft);
+      flex-shrink: 0;
+    }
+    .avatar::after {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 1px dashed var(--line-2);
+      animation: spin 30s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ============ Section ============ */
+    .section { padding: 88px 0 0; }
+    .section-header { margin-bottom: 32px; }
+    .section-label {
+      display: inline-block;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-size: clamp(26px, 3.4vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+      line-height: 1.2;
+    }
+    .section-header p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14.5px;
+      max-width: 560px;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+    }
+    .card:hover { border-color: var(--line-2); }
+
+    /* ============ 关于 Bento ============ */
+    .bento { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+    .bento-side { display: grid; gap: 16px; }
+    .profile-card { padding: 30px; }
+    .profile-line { display: flex; gap: 16px; align-items: center; }
+    .side-avatar {
+      width: 60px; height: 60px;
+      border-radius: 18px;
+      display: grid; place-items: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 20px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      flex-shrink: 0;
+    }
+    .profile-line h3 {
+      margin: 0;
+      font-size: 20px;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+      letter-spacing: -0.01em;
+    }
+    .profile-line p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .bio { margin: 20px 0 24px; color: var(--text-2); line-height: 1.85; font-size: 14.5px; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .stat {
+      padding: 16px 12px;
+      background: var(--line);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      border: 1px solid transparent;
+      transition: border-color .3s ease;
+    }
+    .stat:hover { border-color: var(--accent); }
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .stat span { font-size: 12px; color: var(--muted); margin-top: 4px; display: block; }
+
+    .skills-card { padding: 26px; }
+    .side-title {
+      margin: 0 0 16px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .skill { margin: 14px 0; }
+    .skill-top {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--text-2); margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .skill-top span:last-child { color: var(--accent); font-family: 'Space Grotesk', sans-serif; }
+    .bar { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; }
+    .bar > span {
+      display: block; height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transform-origin: left;
+      animation: barFill 1.2s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes barFill { from { transform: scaleX(0); } }
+
+    .links { display: grid; gap: 8px; }
+    .link-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .link-item:hover {
+      transform: translateX(3px);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .link-item small { color: var(--muted); font-size: 12px; }
+
+    /* ============ 动态 ============ */
+    .moments-head {
+      display: flex; justify-content: space-between; align-items: end;
+      gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .search {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 12px;
+      padding: 10px 16px;
+      outline: none;
+      width: 240px;
+      font-size: 14px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      color: var(--text);
+    }
+    .search::placeholder { color: var(--muted); }
+    .search:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+
+    .stack { display: grid; gap: 16px; }
+    .composer { padding: 24px; }
+    .composer-head { display: flex; gap: 14px; align-items: flex-start; }
+    .mini-avatar {
+      width: 44px; height: 44px; flex: 0 0 44px;
+      border-radius: 14px;
+      display: grid; place-items: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 15px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+    }
+    textarea {
+      width: 100%; min-height: 96px; resize: vertical;
+      padding: 14px 16px;
+      color: var(--text);
+      background: var(--line);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      outline: none;
+      font-size: 14.5px;
+      line-height: 1.7;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      font-family: inherit;
+    }
+    textarea::placeholder { color: var(--muted); }
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+      background: var(--card);
+    }
+    .composer-bottom {
+      margin-top: 14px;
+      display: flex; justify-content: space-between; gap: 10px; align-items: center;
+    }
+    .composer-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .chip-select {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 12px;
+      padding: 10px 14px;
+      outline: none;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: border-color .2s ease;
+      color: var(--text);
+    }
+    .chip-select:hover { border-color: var(--line-2); }
+
+    .post { padding: 24px; }
+    .post:hover { transform: translateY(-2px); }
+    .post-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .post-user { display: flex; align-items: center; gap: 12px; }
+    .post-name { font-weight: 600; font-size: 14.5px; }
+    .post-meta { margin-top: 2px; font-size: 12px; color: var(--muted); }
+    .post-menu {
+      border: 0; background: transparent; color: var(--muted);
+      width: 34px; height: 34px; border-radius: 10px;
+      transition: background .2s ease, color .2s ease;
+      font-size: 16px; line-height: 1;
+    }
+    .post-menu:hover { background: var(--line); color: var(--text); }
+    .post-text { margin: 18px 0 14px; line-height: 1.85; white-space: pre-wrap; font-size: 15px; color: var(--text); }
+    .tag {
+      display: inline-flex; margin: 0 6px 6px 0;
+      padding: 5px 10px; border-radius: 999px;
+      font-size: 12px; color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid transparent;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+    }
+    .post-actions {
+      display: flex; gap: 6px;
+      padding-top: 14px; margin-top: 6px;
+      border-top: 1px solid var(--line);
+    }
+    .action {
+      flex: 1; border: 0; background: transparent;
+      color: var(--muted); border-radius: 10px;
+      padding: 10px 8px; font-size: 13.5px; font-weight: 500;
+      transition: color .2s ease, background .2s ease;
+    }
+    .action:hover, .action.active { color: var(--accent); background: var(--accent-soft); }
+    .comments { margin-top: 12px; display: grid; gap: 8px; }
+    .comment {
+      font-size: 13px; color: var(--text-2);
+      padding: 10px 14px;
+      background: var(--line);
+      border-radius: var(--radius-sm);
+      line-height: 1.7;
+    }
+    .comment b { color: var(--accent); font-weight: 600; margin-right: 4px; }
+    .empty-state { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 14px; }
+
+    /* ============ 项目 ============ */
+    .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .project {
+      padding: 26px; min-height: 200px;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .project::after {
+      content: ""; position: absolute;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+      right: -60px; top: -70px;
+      pointer-events: none;
+      transition: transform .4s ease;
+    }
+    .project:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .project:hover::after { transform: scale(1.3); }
+    .project-icon {
+      width: 48px; height: 48px; border-radius: 15px;
+      display: grid; place-items: center;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      font-size: 22px; margin-bottom: 18px;
+      position: relative; z-index: 1;
+    }
+    .project h3 {
+      margin: 0 0 8px; font-size: 17px; font-weight: 600;
+      position: relative; z-index: 1;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+    }
+    .project p {
+      margin: 0; color: var(--text-2);
+      line-height: 1.7; font-size: 13.5px;
+      position: relative; z-index: 1; flex: 1;
+    }
+    .project-foot {
+      margin-top: 18px;
+      display: flex; justify-content: space-between;
+      color: var(--muted); font-size: 12px;
+      position: relative; z-index: 1;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .project-foot span:last-child { color: var(--accent); }
+
+    /* ============ 留言板 ============ */
+    .guestbook { padding: 28px; }
+    .guest-grid { display: grid; grid-template-columns: .7fr 1.3fr; gap: 12px; }
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px 15px;
+      outline: none;
+      font-size: 14px;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      color: var(--text);
+    }
+    input::placeholder { color: var(--muted); }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); background: var(--card); }
+    .guest-actions { margin-top: 14px; display: flex; justify-content: flex-end; }
+    .guest-list { display: grid; gap: 10px; margin-top: 20px; }
+    .guest-item {
+      padding: 14px 16px; background: var(--line);
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      transition: border-color .2s ease;
+    }
+    .guest-item:hover { border-color: var(--line-2); }
+    .guest-item strong { font-size: 13.5px; color: var(--accent); font-weight: 600; }
+    .guest-item span { color: var(--muted); font-size: 12px; margin-left: 8px; }
+    .guest-item p { margin: 6px 0 0; font-size: 13.5px; color: var(--text-2); line-height: 1.7; }
+
+    /* ============ 玄学占卜板块 ============ */
+    .divination-tabs {
+      display: flex; gap: 6px; margin-bottom: 24px;
+      flex-wrap: wrap;
+      padding: 6px;
+      background: var(--line);
+      border-radius: 16px;
+      border: 1px solid var(--line-2);
+      width: fit-content;
+    }
+    .div-tab {
+      border: 0; background: transparent;
+      color: var(--muted);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 14px; font-weight: 600;
+      transition: all .25s ease;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+    }
+    .div-tab:hover { color: var(--text); }
+    .div-tab.active {
+      color: #0a0a0b;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .div-panel { display: none; }
+    .div-panel.active { display: block; animation: fadeIn .35s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .div-form { padding: 28px; display: grid; gap: 18px; }
+    .form-row { display: grid; gap: 8px; }
+    .form-row label {
+      font-size: 13px; font-weight: 600;
+      color: var(--text-2);
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: .3px;
+    }
+    .form-hint { font-size: 12px; color: var(--muted); }
+    .form-inline { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+    .form-inline .form-row { flex: 1; min-width: 140px; }
+
+    .result-card {
+      margin-top: 20px;
+      padding: 28px;
+      animation: fadeIn .4s ease;
+    }
+    .result-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .result-header h3 {
+      margin: 0; font-size: 18px;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+    }
+    .result-badge {
+      padding: 4px 12px; border-radius: 999px;
+      font-size: 12px; font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .hexagram-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .hexagram-item {
+      text-align: center;
+      padding: 20px 12px;
+      background: var(--line);
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      transition: border-color .3s ease;
+    }
+    .hexagram-item:hover { border-color: var(--accent); }
+    .hexagram-name {
+      font-size: 15px; font-weight: 700;
+      color: var(--accent);
+      margin-top: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .hexagram-label {
+      font-size: 11px; color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hexagram-lines { display: inline-grid; gap: 4px; }
+    .hex-line {
+      width: 60px; height: 8px;
+      border-radius: 2px;
+      transition: background .3s ease;
+    }
+    .hex-line.yang { background: var(--accent); }
+    .hex-line.yin {
+      background: transparent;
+      border-top: 3px solid var(--accent);
+      border-bottom: 3px solid var(--accent);
+      height: 8px;
+    }
+    .hex-line.moving { position: relative; }
+    .hex-line.moving::after {
+      content: "●";
+      position: absolute;
+      right: -18px; top: -5px;
+      color: var(--danger);
+      font-size: 12px;
+    }
+
+    .interp-text {
+      font-size: 14px; color: var(--text-2);
+      line-height: 1.9;
+      padding: 16px 20px;
+      background: var(--line);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent);
+    }
+    .interp-text strong { color: var(--accent); }
+
+    .qimen-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 20px 0;
+      aspect-ratio: 1 / 1;
+      max-width: 560px;
+      margin-left: auto; margin-right: auto;
+    }
+    .qimen-palace {
+      background: var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid transparent;
+      transition: border-color .3s ease, background .3s ease;
+      display: flex; flex-direction: column;
+      font-size: 12px;
+      position: relative;
+      min-height: 0;
+    }
+    .qimen-palace:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .qimen-palace .palace-num {
+      position: absolute;
+      top: 6px; right: 8px;
+      font-size: 10px; color: var(--muted);
+      font-family: 'Space Grotesk', monospace;
+    }
+    .qimen-palace .palace-god {
+      font-size: 11px; color: var(--accent-2);
+      font-weight: 600; margin-bottom: 4px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .qimen-palace .palace-star {
+      font-size: 13px; color: var(--text);
+      font-weight: 700; margin-bottom: 2px;
+    }
+    .qimen-palace .palace-door {
+      font-size: 13px; color: var(--success);
+      font-weight: 600; margin-bottom: 2px;
+    }
+    .qimen-palace .palace-stem {
+      font-size: 11px; color: var(--text-2);
+      margin-top: auto;
+    }
+    .qimen-palace .palace-dipan { font-size: 10px; color: var(--muted); }
+
+    .qimen-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .qimen-info-item {
+      padding: 12px 14px;
+      background: var(--line);
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+    .qimen-info-item .label {
+      font-size: 11px; color: var(--muted);
+      margin-bottom: 4px;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: .5px;
+    }
+    .qimen-info-item .value {
+      font-size: 14px; font-weight: 600;
+      color: var(--accent);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--line-2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .disclaimer {
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      border-left: 3px solid var(--muted);
+    }
+
+    /* ============ 管理员模态框 ============ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      width: min(560px, 100%);
+      max-height: 88vh;
+      overflow-y: auto;
+      background: var(--card-solid);
+      border: 1px solid var(--line-2);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      animation: modalIn .3s cubic-bezier(.2,.8,.2,1);
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal h3 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+      letter-spacing: -0.01em;
+    }
+    .modal-sub {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 34px; height: 34px;
+      border: 0; background: transparent;
+      color: var(--muted); border-radius: 10px;
+      font-size: 18px; line-height: 1;
+      transition: background .2s ease, color .2s ease;
+    }
+    .modal-close:hover { background: var(--line); color: var(--text); }
+    .modal-inner { position: relative; }
+
+    .pwd-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--line);
+      border-radius: 12px;
+      padding: 13px 16px;
+      outline: none;
+      font-size: 15px;
+      letter-spacing: 2px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .pwd-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+    .login-error {
+      color: var(--danger);
+      font-size: 13px;
+      min-height: 20px;
+      margin-bottom: 10px;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+    .shake { animation: shake .4s ease; }
+
+    .edit-fields {
+      display: grid;
+      gap: 14px;
+      margin: 20px 0 24px;
+    }
+    .edit-field { display: grid; gap: 6px; }
+    .edit-field label {
+      font-size: 11.5px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .edit-field input,
+    .edit-field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      color: var(--text);
+      font-family: inherit;
+    }
+    .edit-field input:focus,
+    .edit-field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .edit-field textarea {
+      resize: vertical;
+      min-height: 70px;
+      line-height: 1.7;
+    }
+    .edit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .modal-actions .btn { flex: 1; min-width: 100px; justify-content: center; }
+    .toast {
+      position: fixed;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--accent);
+      color: #0a0a0b;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease;
+      box-shadow: 0 10px 30px var(--accent-glow);
+      font-family: 'Space Grotesk', Inter, sans-serif;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ============ 页脚 ============ */
+    footer {
+      padding: 60px 0 44px;
+      color: var(--muted);
+      font-size: 12.5px;
+      text-align: center;
+      font-family: 'Space Grotesk', Inter, sans-serif;
+    }
+    .footer-flex { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    footer .dot-sep { color: var(--line-2); }
+
+    /* ============ 回到顶部 ============ */
+    #backTop {
+      position: fixed;
+      right: 24px; bottom: 24px;
+      width: 44px; height: 44px;
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 20;
+      transition: transform .2s ease, border-color .2s ease;
+      font-size: 16px;
+    }
+    #backTop:hover { transform: translateY(-3px); border-color: var(--accent); }
+
+    /* ============ 滚动淡入 ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============ 响应式 ============ */
+    @media (max-width: 900px) {
+      .bento { grid-template-columns: 1fr; }
+      .projects { grid-template-columns: 1fr 1fr; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .avatar { width: 110px; height: 110px; font-size: 34px; }
+      .hero-card { padding: 40px 32px; }
+      .hero-card::after { display: none; }
+      .hexagram-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .shell { width: calc(100% - 24px); }
+      .nav { height: 60px; }
+      .nav-links a { display: none; }
+      .hero { padding: 28px 0 12px; }
+      .hero-card { padding: 32px 24px; border-radius: 24px; }
+      .hero h1 { font-size: 36px; }
+      .section { padding: 60px 0 0; }
+      .projects, .guest-grid { grid-template-columns: 1fr; }
+      .composer-bottom { flex-direction: column; align-items: stretch; }
+      .composer-tools { width: 100%; }
+      .chip-select { width: 100%; }
+      .composer-bottom .btn { width: 100%; justify-content: center; }
+      .moments-head { flex-direction: column; align-items: stretch; }
+      .search { width: 100%; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .stat { padding: 12px 6px; }
+      .stat strong { font-size: 19px; }
+      .divination-tabs { width: 100%; }
+      .div-tab { flex: 1; text-align: center; padding: 10px 8px; font-size: 12.5px; }
+      .qimen-grid { max-width: 100%; }
+      .qimen-palace { padding: 8px; font-size: 10px; }
+      .qimen-palace .palace-star,
+      .qimen-palace .palace-door { font-size: 11px; }
+      .form-inline { flex-direction: column; }
+      .edit-row { grid-template-columns: 1fr; }
+      .modal { padding: 24px 20px; }
+      .modal-actions { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
-    <hi>你好，我是郭恒言</hi>
-  
+  <header class="topbar" id="topbar">
+    <div class="shell nav">
+      <a class="brand" href="#home" aria-label="首页">
+        <div class="brand-mark" data-profile="brandMark">GH</div>
+        <span data-profile="siteName">郭恒言 · 个人空间</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#about">关于</a>
+        <a href="#moments">动态</a>
+        <a href="#projects">项目</a>
+        <a href="#divination">玄学</a>
+        <a href="#guestbook">留言</a>
+        <button class="icon-btn" id="adminBtn" title="管理员登录" aria-label="管理员登录">🔒</button>
+        <button class="icon-btn" id="themeBtn" title="切换主题" aria-label="切换主题">☀</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell" id="home">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow"><span class="dot"></span> Personal Space · 在线</div>
+            <h1>你好，我是<br><span class="accent" data-profile="name">郭恒言</span></h1>
+            <p data-profile="heroDesc">这是我的个人数字空间。记录日常动态、展示正在做的项目、分享一些想法，也把它当成一张不断更新的个人名片。</p>
+            <div class="motto" data-profile="motto">「把想法变成现实，把生活过成作品。」</div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#moments">看看我的动态 →</a>
+              <a class="btn btn-ghost" href="#divination">试试玄学占卜</a>
+            </div>
+          </div>
+          <div class="avatar" aria-label="头像" data-profile="avatarText">GH</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="about">
+      <div class="section-header">
+        <span class="section-label">01 — 关于</span>
+        <h2>一张更完整的数字名片</h2>
+      </div>
+      <div class="bento">
+        <div class="card profile-card">
+          <div class="profile-line">
+            <div class="side-avatar" data-profile="avatarText">GH</div>
+            <div>
+              <h3 data-profile="name">郭恒言</h3>
+              <p data-profile="tagline">探索 · 学习 · 创作</p>
+            </div>
+          </div>
+          <p class="bio" data-profile="bio">喜欢把想法变成真实的网页，也喜欢把生活中的小片段记录下来。这个页面会作为我的长期主页，后续还会继续加入更多内容。</p>
+          <div class="stats">
+            <div class="stat"><strong id="postCount">0</strong><span>动态</span></div>
+            <div class="stat"><strong id="guestCount">0</strong><span>留言</span></div>
+            <div class="stat"><strong id="daysOnline">1</strong><span>记录天数</span></div>
+          </div>
+        </div>
+        <div class="bento-side">
+          <div class="card skills-card">
+            <div class="side-title">技能 / 兴趣</div>
+            <div class="skill"><div class="skill-top"><span>网页设计</span><span>80%</span></div><div class="bar"><span style="width:80%"></span></div></div>
+            <div class="skill"><div class="skill-top"><span>前端开发</span><span>75%</span></div><div class="bar"><span style="width:75%"></span></div></div>
+            <div class="skill"><div class="skill-top"><span>内容创作</span><span>70%</span></div><div class="bar"><span style="width:70%"></span></div></div>
+            <div class="skill"><div class="skill-top"><span>探索新事物</span><span>90%</span></div><div class="bar"><span style="width:90%"></span></div></div>
+          </div>
+          <div class="card skills-card">
+            <div class="side-title">常用入口</div>
+            <div class="links">
+              <a class="link-item" href="#projects"><span>🚀 我的项目</span><small>查看</small></a>
+              <a class="link-item" href="#moments"><span>📝 最近动态</span><small>浏览</small></a>
+              <a class="link-item" href="#divination"><span>🔮 玄学占卜</span><small>试试</small></a>
+              <a class="link-item" href="#guestbook"><span>💬 留言板</span><small>留下话</small></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="moments">
+      <div class="section-header">
+        <span class="section-label">02 — 动态</span>
+        <h2>最近在想什么</h2>
+        <p>像朋友圈一样，记录此刻。</p>
+      </div>
+      <div class="moments-head">
+        <input class="search" id="searchInput" type="search" placeholder="搜索动态…" aria-label="搜索动态" />
+      </div>
+      <div class="stack">
+        <div class="card composer">
+          <div class="composer-head">
+            <div class="mini-avatar" data-profile="avatarText">GH</div>
+            <textarea id="postText" maxlength="500" placeholder="这一刻想说点什么？比如：今天完成了一个新页面……"></textarea>
+          </div>
+          <div class="composer-bottom">
+            <div class="composer-tools">
+              <select id="postMood" class="chip-select" aria-label="选择心情">
+                <option value="✨">✨ 今天状态不错</option>
+                <option value="📚">📚 正在学习</option>
+                <option value="💡">💡 有个新想法</option>
+                <option value="🌙">🌙 慢下来一点</option>
+                <option value="🚀">🚀 正在行动</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="publishBtn">发布动态</button>
+          </div>
+        </div>
+        <div id="feed" class="stack"></div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="projects">
+      <div class="section-header">
+        <span class="section-label">03 — 项目</span>
+        <h2>做过的一些东西</h2>
+        <p>把兴趣做成一些可以打开的东西。</p>
+      </div>
+      <div class="projects">
+        <article class="card project">
+          <div class="project-icon">🌐</div>
+          <h3>个人主页</h3>
+          <p>现在你看到的这个网站，集合个人简介、动态、项目与留言等功能。</p>
+          <div class="project-foot"><span>HTML · CSS · JS</span><span>进行中</span></div>
+        </article>
+        <article class="card project">
+          <div class="project-icon">📒</div>
+          <h3>个人记录库</h3>
+          <p>把日常想法、学习笔记和灵感整理成自己的小型知识空间。</p>
+          <div class="project-foot"><span>Notes</span><span>想法</span></div>
+        </article>
+        <article class="card project">
+          <div class="project-icon">🔮</div>
+          <h3>玄学实验室</h3>
+          <p>梅花易数起卦、奇门遁甲排盘，用代码探索传统文化。</p>
+          <div class="project-foot"><span>Divination</span><span>持续更新</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="divination">
+      <div class="section-header">
+        <span class="section-label">04 — 玄学</span>
+        <h2>占卜与排盘</h2>
+        <p>梅花易数起卦、奇门遁甲排盘。结果仅供传统文化研究与娱乐参考。</p>
+      </div>
+
+      <div class="divination-tabs">
+        <button class="div-tab active" data-panel="meihua-time">🕐 时辰起卦</button>
+        <button class="div-tab" data-panel="meihua-chars">📝 三字起卦</button>
+        <button class="div-tab" data-panel="meihua-bazi">🎂 生辰起卦</button>
+        <button class="div-tab" data-panel="qimen">🧭 奇门遁甲</button>
+      </div>
+
+      <div class="div-panel active" id="panel-meihua-time">
+        <div class="card div-form">
+          <div class="form-row">
+            <label>起卦时间</label>
+            <div class="form-inline">
+              <div class="form-row">
+                <input type="datetime-local" id="mhTimeInput" />
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="castMeihuaByTime()">立即起卦</button>
+              <button class="btn btn-ghost btn-sm" onclick="useNowTime()">使用当前时间</button>
+            </div>
+            <span class="form-hint">不填则使用当前时间。以农历年月日时数起卦。</span>
+          </div>
+        </div>
+        <div id="mhTimeResult"></div>
+      </div>
+
+      <div class="div-panel" id="panel-meihua-chars">
+        <div class="card div-form">
+          <div class="form-row">
+            <label>输入三个汉字</label>
+            <div class="form-inline">
+              <div class="form-row"><input type="text" id="mhChar1" maxlength="1" placeholder="第一个字" style="text-align:center;font-size:20px" /></div>
+              <div class="form-row"><input type="text" id="mhChar2" maxlength="1" placeholder="第二个字" style="text-align:center;font-size:20px" /></div>
+              <div class="form-row"><input type="text" id="mhChar3" maxlength="1" placeholder="第三个字" style="text-align:center;font-size:20px" /></div>
+              <button class="btn btn-primary btn-sm" onclick="castMeihuaByChars()">起卦</button>
+            </div>
+            <span class="form-hint">取三字笔画数：首字定上卦，后两字之和定下卦，总笔画定动爻。</span>
+          </div>
+        </div>
+        <div id="mhCharsResult"></div>
+      </div>
+
+      <div class="div-panel" id="panel-meihua-bazi">
+        <div class="card div-form">
+          <div class="form-row">
+            <label>出生日期与时间</label>
+            <div class="form-inline">
+              <div class="form-row"><input type="datetime-local" id="mhBaziInput" /></div>
+              <button class="btn btn-primary btn-sm" onclick="castMeihuaByBazi()">起卦</button>
+            </div>
+            <span class="form-hint">以出生时刻的农历年月日时数起卦。</span>
+          </div>
+        </div>
+        <div id="mhBaziResult"></div>
+      </div>
+
+      <div class="div-panel" id="panel-qimen">
+        <div class="card div-form">
+          <div class="form-row">
+            <label>排盘时间</label>
+            <div class="form-inline">
+              <div class="form-row"><input type="datetime-local" id="qmTimeInput" /></div>
+              <button class="btn btn-primary btn-sm" id="qmBtn" onclick="castQimen()">起局排盘</button>
+              <button class="btn btn-ghost btn-sm" onclick="useQimenNow()">使用当前时间</button>
+            </div>
+            <span class="form-hint">支持年/月/日/时家四层排盘，默认使用拆补法起局。</span>
+          </div>
+        </div>
+        <div id="qmResult"></div>
+      </div>
+
+      <div class="disclaimer">
+        ⚠️ 免责声明：以上排盘与起卦结果均由开源算法自动生成，仅供传统文化研究、学习与娱乐参考，不构成任何命理预测、专业建议或决策依据。命理术数存在流派差异，请勿用于医疗、法律、投资、婚姻等重大人生决策。
+      </div>
+    </section>
+
+    <section class="section reveal" id="guestbook">
+      <div class="section-header">
+        <span class="section-label">05 — 留言</span>
+        <h2>留下你的痕迹</h2>
+        <p>路过这里的人，可以留下一句话。</p>
+      </div>
+      <div class="card guestbook">
+        <div class="guest-grid">
+          <input id="guestName" maxlength="20" placeholder="你的昵称" />
+          <input id="guestText" maxlength="120" placeholder="想说些什么？" />
+        </div>
+        <div class="guest-actions"><button class="btn btn-primary" id="guestBtn">写下留言</button></div>
+        <div id="guestList" class="guest-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-flex">
+      <span>© <span id="year"></span> <span data-profile="footerName">郭恒言</span></span>
+      <span class="dot-sep">·</span>
+      <span id="clock">正在读取时间…</span>
+      <span class="dot-sep">·</span>
+      <span>Made with HTML / CSS / JavaScript</span>
+    </div>
+  </footer>
+
+  <button id="backTop" aria-label="返回顶部" title="返回顶部">↑</button>
+
+  <!-- ============ 管理员模态框 ============ -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <div class="modal-inner">
+        <button class="modal-close" id="modalClose" aria-label="关闭">✕</button>
+
+        <!-- 登录视图 -->
+        <div id="loginView">
+          <h3>管理员登录</h3>
+          <p class="modal-sub">输入密码后可以实时修改个人信息</p>
+          <input type="password" id="adminPwd" class="pwd-input" placeholder="请输入管理员密码" autocomplete="off" />
+          <div class="login-error" id="loginError"></div>
+          <button class="btn btn-primary" id="loginBtn" style="width:100%;justify-content:center">登录</button>
+        </div>
+
+        <!-- 编辑视图 -->
+        <div id="editView" style="display:none">
+          <h3>编辑个人信息</h3>
+          <p class="modal-sub">修改后点击保存，全站立即更新</p>
+
+          <div class="edit-fields">
+            <div class="edit-row">
+              <div class="edit-field">
+                <label>站点名</label>
+                <input data-field="siteName" maxlength="30" />
+              </div>
+              <div class="edit-field">
+                <label>品牌缩写</label>
+                <input data-field="brandMark" maxlength="4" />
+              </div>
+            </div>
+
+            <div class="edit-row">
+              <div class="edit-field">
+                <label>名字</label>
+                <input data-field="name" maxlength="20" />
+              </div>
+              <div class="edit-field">
+                <label>头像文字</label>
+                <input data-field="avatarText" maxlength="4" />
+              </div>
+            </div>
+
+            <div class="edit-field">
+              <label>副标题</label>
+              <input data-field="tagline" maxlength="30" />
+            </div>
+
+            <div class="edit-field">
+              <label>Hero 描述</label>
+              <textarea data-field="heroDesc" maxlength="200" style="min-height:80px"></textarea>
+            </div>
+
+            <div class="edit-field">
+              <label>个人简介</label>
+              <textarea data-field="bio" maxlength="300" style="min-height:100px"></textarea>
+            </div>
+
+            <div class="edit-field">
+              <label>座右铭</label>
+              <input data-field="motto" maxlength="60" />
+            </div>
+
+            <div class="edit-field">
+              <label>页脚名字</label>
+              <input data-field="footerName" maxlength="20" />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-primary" id="saveBtn">保存修改</button>
+            <button class="btn btn-ghost" id="resetBtn">恢复默认</button>
+            <button class="btn btn-ghost" id="logoutBtn">退出登录</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ============================================================
+       常量
+       ============================================================ */
+    const STORAGE_POSTS = 'guo_hengyan_posts_v1';
+    const STORAGE_GUESTS = 'guo_hengyan_guests_v1';
+    const STORAGE_THEME = 'guo_hengyan_theme_v2';
+    const STORAGE_PROFILE = 'guo_hengyan_profile_v1';
+    const ADMIN_PASSWORD = 'Guoguo201008';
+    const START_DATE = '2026-09-19';
+
+    const seedPosts = [
+      {
+        id: crypto.randomUUID(),
+        text: '我的个人主页终于开始搭起来了。以后这里会记录一些项目、学习和生活中的小片段。🚀',
+        mood: '✨', likes: 6, liked: false,
+        comments: ['页面第一版上线。'],
+        created: Date.now() - 1000 * 60 * 45
+      },
+      {
+        id: crypto.randomUUID(),
+        text: '今天给自己定一个小目标：持续更新，而不是只做一个好看的首页。',
+        mood: '💡', likes: 3, liked: false,
+        comments: [],
+        created: Date.now() - 1000 * 60 * 60 * 4
+      }
+    ];
+
+    /* ============================================================
+       个人资料系统
+       ============================================================ */
+    const DEFAULT_PROFILE = {
+      siteName: '郭恒言 · 个人空间',
+      brandMark: 'GH',
+      name: '郭恒言',
+      tagline: '探索 · 学习 · 创作',
+      avatarText: 'GH',
+      heroDesc: '这是我的个人数字空间。记录日常动态、展示正在做的项目、分享一些想法，也把它当成一张不断更新的个人名片。',
+      bio: '喜欢把想法变成真实的网页，也喜欢把生活中的小片段记录下来。这个页面会作为我的长期主页，后续还会继续加入更多内容。',
+      motto: '「把想法变成现实，把生活过成作品。」',
+      footerName: '郭恒言'
+    };
+
+    let profile = load(STORAGE_PROFILE, null) || { ...DEFAULT_PROFILE };
+
+    function applyProfile() {
+      document.querySelectorAll('[data-profile]').forEach(el => {
+        const key = el.dataset.profile;
+        if (profile[key] !== undefined && profile[key] !== null) {
+          el.textContent = profile[key];
+        }
+      });
+      // 动态中的名字/头像也同步
+      renderFeed();
+      renderGuests();
+    }
+
+    function fillEditForm() {
+      document.querySelectorAll('[data-field]').forEach(el => {
+        const key = el.dataset.field;
+        if (profile[key] !== undefined) {
+          el.value = profile[key];
+        }
+      });
+    }
+
+    function collectEditForm() {
+      const newProfile = {};
+      document.querySelectorAll('[data-field]').forEach(el => {
+        newProfile[el.dataset.field] = el.value.trim() || DEFAULT_PROFILE[el.dataset.field];
+      });
+      return newProfile;
+    }
+
+    function saveProfileToStorage() {
+      localStorage.setItem(STORAGE_PROFILE, JSON.stringify(profile));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    /* ============================================================
+       管理员模态框
+       ============================================================ */
+    const adminModal = document.getElementById('adminModal');
+    const adminBtn = document.getElementById('adminBtn');
+    const loginView = document.getElementById('loginView');
+    const editView = document.getElementById('editView');
+    const adminPwd = document.getElementById('adminPwd');
+    const loginError = document.getElementById('loginError');
+
+    function openModal() {
+      adminModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      if (sessionStorage.getItem('gh_admin') === '1') {
+        showEditView();
+      } else {
+        showLoginView();
+      }
+    }
+    function closeModal() {
+      adminModal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    function showLoginView() {
+      loginView.style.display = '';
+      editView.style.display = 'none';
+      adminPwd.value = '';
+      loginError.textContent = '';
+      setTimeout(() => adminPwd.focus(), 100);
+    }
+    function showEditView() {
+      loginView.style.display = 'none';
+      editView.style.display = '';
+      fillEditForm();
+      adminBtn.textContent = '✎';
+      adminBtn.classList.add('unlocked');
+    }
+    function setLoggedOut() {
+      sessionStorage.removeItem('gh_admin');
+      adminBtn.textContent = '🔒';
+      adminBtn.classList.remove('unlocked');
+    }
+
+    adminBtn.addEventListener('click', openModal);
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    adminModal.addEventListener('click', (e) => {
+      if (e.target === adminModal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && adminModal.classList.contains('show')) closeModal();
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', doLogin);
+    adminPwd.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    function doLogin() {
+      const pwd = adminPwd.value;
+      if (pwd === ADMIN_PASSWORD) {
+        sessionStorage.setItem('gh_admin', '1');
+        loginError.textContent = '';
+        showEditView();
+        showToast('登录成功，可以开始编辑');
+      } else {
+        loginError.textContent = '密码错误，请重试。';
+        adminPwd.classList.add('shake');
+        setTimeout(() => adminPwd.classList.remove('shake'), 450);
+        adminPwd.select();
+      }
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      profile = { ...DEFAULT_PROFILE, ...collectEditForm() };
+      saveProfileToStorage();
+      applyProfile();
+      showToast('已保存，全站已更新');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (!confirm('确定恢复所有个人信息为默认值吗？')) return;
+      profile = { ...DEFAULT_PROFILE };
+      localStorage.removeItem(STORAGE_PROFILE);
+      applyProfile();
+      fillEditForm();
+      showToast('已恢复默认');
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      setLoggedOut();
+      closeModal();
+      showToast('已退出管理员模式');
+    });
+
+    /* ============================================================
+       梅花易数 —— 核心算法
+       ============================================================ */
+    const BAGUA_NAMES = ['', '乾', '兑', '离', '震', '巽', '坎', '艮', '坤'];
+    const BAGUA_SYMBOLS = ['', '☰', '☱', '☲', '☳', '☴', '☵', '☶', '☷'];
+    const BAGUA_WUXING = ['', '金', '金', '火', '木', '木', '水', '土', '土'];
+    const BAGUA_NATURE = ['', '天', '泽', '火', '雷', '风', '水', '山', '地'];
+
+    const HEXAGRAM_NAMES = {
+      '11': '乾为天', '12': '天泽履', '13': '天火同人', '14': '天雷无妄',
+      '15': '天风姤', '16': '天水讼', '17': '天山遁', '18': '天地否',
+      '21': '泽天夬', '22': '兑为泽', '23': '泽火革', '24': '泽雷随',
+      '25': '泽风大过', '26': '泽水困', '27': '泽山咸', '28': '泽地萃',
+      '31': '火天大有', '32': '火泽睽', '33': '离为火', '34': '火雷噬嗑',
+      '35': '火风鼎', '36': '火水未济', '37': '火山旅', '38': '火地晋',
+      '41': '雷天大壮', '42': '雷泽归妹', '43': '雷火丰', '44': '震为雷',
+      '45': '雷风恒', '46': '雷水解', '47': '雷山小过', '48': '雷地豫',
+      '51': '风天小畜', '52': '风泽中孚', '53': '风火家人', '54': '风雷益',
+      '55': '巽为风', '56': '风水涣', '57': '风山渐', '58': '风地观',
+      '61': '水天需', '62': '水泽节', '63': '水火既济', '64': '水雷屯',
+      '65': '水风井', '66': '坎为水', '67': '水山蹇', '68': '水地比',
+      '71': '山天大畜', '72': '山泽损', '73': '山火贲', '74': '山雷颐',
+      '75': '山风蛊', '76': '山水蒙', '77': '艮为山', '78': '山地剥',
+      '81': '地天泰', '82': '地泽临', '83': '地火明夷', '84': '地雷复',
+      '85': '地风升', '86': '地水师', '87': '地山谦', '88': '坤为地'
+    };
+
+    const BAGUA_LINES = {
+      1: [true, true, true],
+      2: [true, true, false],
+      3: [true, false, true],
+      4: [true, false, false],
+      5: [false, true, true],
+      6: [false, true, false],
+      7: [false, false, true],
+      8: [false, false, false]
+    };
+
+    function numToBagua(n) {
+      const r = n % 8;
+      return r === 0 ? 8 : r;
+    }
+
+    function getHexagramLines(upper, lower) {
+      return [...BAGUA_LINES[lower], ...BAGUA_LINES[upper]];
+    }
+
+    function linesToBagua(lines) {
+      const lowerKey = lines.slice(0, 3).map(l => l ? '1' : '0').join('');
+      const upperKey = lines.slice(3, 6).map(l => l ? '1' : '0').join('');
+      const map = {
+        '111': 1, '110': 2, '101': 3, '100': 4,
+        '011': 5, '010': 6, '001': 7, '000': 8
+      };
+      return { upper: map[upperKey], lower: map[lowerKey] };
+    }
+
+    function getMutualHexagram(lines) {
+      const mutualLower = [lines[1], lines[2], lines[3]];
+      const mutualUpper = [lines[2], lines[3], lines[4]];
+      const lowerKey = mutualLower.map(l => l ? '1' : '0').join('');
+      const upperKey = mutualUpper.map(l => l ? '1' : '0').join('');
+      const map = {
+        '111': 1, '110': 2, '101': 3, '100': 4,
+        '011': 5, '010': 6, '001': 7, '000': 8
+      };
+      return { upper: map[upperKey], lower: map[lowerKey] };
+    }
+
+    function getChangedHexagram(lines, movingLine) {
+      const newLines = [...lines];
+      newLines[movingLine - 1] = !newLines[movingLine - 1];
+      return linesToBagua(newLines);
+    }
+
+    function getHexagramName(upper, lower) {
+      return HEXAGRAM_NAMES[`${upper}${lower}`] || '未知卦';
+    }
+
+    function analyzeBodyUse(upper, lower, movingLine) {
+      let body, use, bodyName, useName;
+      if (movingLine >= 4) {
+        body = lower; use = upper;
+        bodyName = BAGUA_NAMES[lower];
+        useName = BAGUA_NAMES[upper];
+      } else {
+        body = upper; use = lower;
+        bodyName = BAGUA_NAMES[upper];
+        useName = BAGUA_NAMES[lower];
+      }
+      const bodyWX = BAGUA_WUXING[body];
+      const useWX = BAGUA_WUXING[use];
+
+      const SHENG = { '金': '水', '水': '木', '木': '火', '火': '土', '土': '金' };
+      const KE = { '金': '木', '木': '土', '土': '水', '水': '火', '火': '金' };
+
+      let relation, judgement;
+      if (bodyWX === useWX) {
+        relation = '体用比和';
+        judgement = '吉。体用五行相同，互相帮扶，事情顺利。';
+      } else if (SHENG[useWX] === bodyWX) {
+        relation = '用生体';
+        judgement = '大吉。用卦生体卦，外部环境对你有利，有贵人相助。';
+      } else if (SHENG[bodyWX] === useWX) {
+        relation = '体生用';
+        judgement = '小凶。你付出较多，消耗精力，需注意劳逸结合。';
+      } else if (KE[bodyWX] === useWX) {
+        relation = '体克用';
+        judgement = '吉。你能掌控局面，但需要主动出击才能成事。';
+      } else if (KE[useWX] === bodyWX) {
+        relation = '用克体';
+        judgement = '凶。外部环境对你形成压制，宜守不宜攻。';
+      } else {
+        relation = '关系不明';
+        judgement = '需结合具体卦象详细分析。';
+      }
+
+      return { bodyName, useName, bodyWX, useWX, relation, judgement };
+    }
+
+    function renderLines(lines, movingLine) {
+      let html = '<div class="hexagram-lines">';
+      for (let i = 5; i >= 0; i--) {
+        const isMoving = (i + 1) === movingLine;
+        const cls = lines[i] ? 'yang' : 'yin';
+        html += `<div class="hex-line ${cls} ${isMoving ? 'moving' : ''}"></div>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderHexagramResult(containerId, upper, lower, movingLine, title) {
+      const lines = getHexagramLines(upper, lower);
+      const changed = getChangedHexagram(lines, movingLine);
+      const mutual = getMutualHexagram(lines);
+      const bodyUse = analyzeBodyUse(upper, lower, movingLine);
+
+      const benGuaName = getHexagramName(upper, lower);
+      const huGuaName = getHexagramName(mutual.upper, mutual.lower);
+      const bianGuaName = getHexagramName(changed.upper, changed.lower);
+
+      const container = document.getElementById(containerId);
+      container.innerHTML = `
+        <div class="card result-card">
+          <div class="result-header">
+            <h3>${title || '起卦结果'}</h3>
+            <span class="result-badge">第 ${movingLine} 爻动</span>
+          </div>
+          <div class="hexagram-grid">
+            <div class="hexagram-item">
+              ${renderLines(lines, movingLine)}
+              <div class="hexagram-name">${benGuaName}</div>
+              <div class="hexagram-label">本卦</div>
+            </div>
+            <div class="hexagram-item">
+              ${renderLines(getHexagramLines(mutual.upper, mutual.lower), 0)}
+              <div class="hexagram-name">${huGuaName}</div>
+              <div class="hexagram-label">互卦</div>
+            </div>
+            <div class="hexagram-item">
+              ${renderLines(getHexagramLines(changed.upper, changed.lower), 0)}
+              <div class="hexagram-name">${bianGuaName}</div>
+              <div class="hexagram-label">变卦</div>
+            </div>
+          </div>
+          <div class="qimen-info">
+            <div class="qimen-info-item">
+              <div class="label">上卦</div>
+              <div class="value">${BAGUA_SYMBOLS[upper]} ${BAGUA_NAMES[upper]}（${BAGUA_NATURE[upper]}·${BAGUA_WUXING[upper]}）</div>
+            </div>
+            <div class="qimen-info-item">
+              <div class="label">下卦</div>
+              <div class="value">${BAGUA_SYMBOLS[lower]} ${BAGUA_NAMES[lower]}（${BAGUA_NATURE[lower]}·${BAGUA_WUXING[lower]}）</div>
+            </div>
+            <div class="qimen-info-item">
+              <div class="label">动爻</div>
+              <div class="value">第 ${movingLine} 爻</div>
+            </div>
+          </div>
+          <div class="interp-text">
+            <strong>体用分析：</strong>${bodyUse.bodyName}为体（${bodyUse.bodyWX}），${bodyUse.useName}为用（${bodyUse.useWX}）。<br>
+            <strong>关系：</strong>${bodyUse.relation}<br>
+            <strong>判断：</strong>${bodyUse.judgement}
+          </div>
+        </div>
+      `;
+    }
+
+    function castMeihuaByTime() {
+      const input = document.getElementById('mhTimeInput').value;
+      const date = input ? new Date(input) : new Date();
+
+      let lunarDate;
+      try { lunarDate = Lunar.toLunar(date); }
+      catch (e) { alert('农历转换失败，请检查日期。'); return; }
+
+      const yearZhi = lunarDate.lunar.yearZhi || '';
+      const zhiMap = { '子': 1, '丑': 2, '寅': 3, '卯': 4, '辰': 5, '巳': 6, '午': 7, '未': 8, '申': 9, '酉': 10, '戌': 11, '亥': 12 };
+      const yearNum = zhiMap[yearZhi] || 1;
+      const monthNum = lunarDate.lunar.month || 1;
+      const dayNum = lunarDate.lunar.day || 1;
+
+      const hour = date.getHours();
+      const shichenZhi = getShichen(hour);
+      const hourNum = zhiMap[shichenZhi] || 1;
+
+      const upper = numToBagua(yearNum + monthNum + dayNum);
+      const lower = numToBagua(yearNum + monthNum + dayNum + hourNum);
+      const movingRaw = yearNum + monthNum + dayNum + hourNum;
+      const movingLine = movingRaw % 6 === 0 ? 6 : movingRaw % 6;
+
+      const lunarStr = `农历${yearZhi}年${monthNum}月${dayNum}日 ${shichenZhi}时`;
+      renderHexagramResult('mhTimeResult', upper, lower, movingLine, `时辰起卦 · ${lunarStr}`);
+    }
+
+    function getShichen(hour) {
+      if (hour >= 23 || hour < 1) return '子';
+      if (hour < 3) return '丑';
+      if (hour < 5) return '寅';
+      if (hour < 7) return '卯';
+      if (hour < 9) return '辰';
+      if (hour < 11) return '巳';
+      if (hour < 13) return '午';
+      if (hour < 15) return '未';
+      if (hour < 17) return '申';
+      if (hour < 19) return '酉';
+      if (hour < 21) return '戌';
+      return '亥';
+    }
+
+    function useNowTime() {
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('mhTimeInput').value =
+        `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    }
+
+    function castMeihuaByChars() {
+      const c1 = document.getElementById('mhChar1').value.trim();
+      const c2 = document.getElementById('mhChar2').value.trim();
+      const c3 = document.getElementById('mhChar3').value.trim();
+
+      if (!c1 || !c2 || !c3) { alert('请输入三个汉字。'); return; }
+
+      let s1, s2, s3;
+      try {
+        s1 = cnchar.stroke(c1);
+        s2 = cnchar.stroke(c2);
+        s3 = cnchar.stroke(c3);
+      } catch (e) {
+        s1 = c1.charCodeAt(0) % 30 + 1;
+        s2 = c2.charCodeAt(0) % 30 + 1;
+        s3 = c3.charCodeAt(0) % 30 + 1;
+      }
+
+      const upper = numToBagua(s1);
+      const lower = numToBagua(s2 + s3);
+      const movingRaw = s1 + s2 + s3;
+      const movingLine = movingRaw % 6 === 0 ? 6 : movingRaw % 6;
+
+      renderHexagramResult('mhCharsResult', upper, lower, movingLine, `三字起卦 · 「${c1}${c2}${c3}」`);
+
+      const container = document.getElementById('mhCharsResult');
+      const extra = document.createElement('div');
+      extra.className = 'interp-text';
+      extra.style.marginTop = '12px';
+      extra.innerHTML = `<strong>笔画数：</strong>${c1}=${s1}画，${c2}=${s2}画，${c3}=${s3}画。总笔画 ${movingRaw}，动爻为第 ${movingLine} 爻。`;
+      container.querySelector('.result-card').appendChild(extra);
+    }
+
+    function castMeihuaByBazi() {
+      const input = document.getElementById('mhBaziInput').value;
+      if (!input) { alert('请选择出生日期与时间。'); return; }
+      const date = new Date(input);
+
+      let lunarDate;
+      try { lunarDate = Lunar.toLunar(date); }
+      catch (e) { alert('农历转换失败，请检查日期。'); return; }
+
+      const yearZhi = lunarDate.lunar.yearZhi || '';
+      const zhiMap = { '子': 1, '丑': 2, '寅': 3, '卯': 4, '辰': 5, '巳': 6, '午': 7, '未': 8, '申': 9, '酉': 10, '戌': 11, '亥': 12 };
+      const yearNum = zhiMap[yearZhi] || 1;
+      const monthNum = lunarDate.lunar.month || 1;
+      const dayNum = lunarDate.lunar.day || 1;
+
+      const hour = date.getHours();
+      const shichenZhi = getShichen(hour);
+      const hourNum = zhiMap[shichenZhi] || 1;
+
+      const upper = numToBagua(yearNum + monthNum + dayNum);
+      const lower = numToBagua(yearNum + monthNum + dayNum + hourNum);
+      const movingRaw = yearNum + monthNum + dayNum + hourNum;
+      const movingLine = movingRaw % 6 === 0 ? 6 : movingRaw % 6;
+
+      const lunarStr = `农历${yearZhi}年${monthNum}月${dayNum}日 ${shichenZhi}时`;
+      renderHexagramResult('mhBaziResult', upper, lower, movingLine, `生辰起卦 · ${lunarStr}`);
+    }
+
+    function castQimen() {
+      const input = document.getElementById('qmTimeInput').value;
+      const date = input ? new Date(input) : new Date();
+      const dateStr = date.toISOString().slice(0, 19).replace('T', ' ');
+
+      const btn = document.getElementById('qmBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>排盘中…';
+
+      setTimeout(() => {
+        try {
+          let chart;
+          if (typeof ThreeMeta !== 'undefined' && ThreeMeta.QimenChart) {
+            chart = ThreeMeta.QimenChart.byDatetime(dateStr);
+          } else {
+            throw new Error('3meta 库未加载');
+          }
+          renderQimenChart('qmResult', chart);
+        } catch (e) {
+          console.error(e);
+          document.getElementById('qmResult').innerHTML = `
+            <div class="card result-card">
+              <div class="empty-state">
+                排盘失败：${e.message}<br>
+                <span style="font-size:12px">请确认 3meta 库已正确加载，或稍后重试。</span>
+              </div>
+            </div>`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '起局排盘';
+        }
+      }, 50);
+    }
+
+    function useQimenNow() {
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('qmTimeInput').value =
+        `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    }
+
+    function renderQimenChart(containerId, chart) {
+      const container = document.getElementById(containerId);
+      const info = chart.info || {};
+      const palaces = chart.palaces || [];
+      const palaceMap = {};
+      palaces.forEach(p => {
+        if (p && p.palace !== undefined) palaceMap[p.palace] = p;
+      });
+
+      const gridOrder = [4, 9, 2, 3, 5, 7, 8, 1, 6];
+      let gridHtml = '';
+      gridOrder.forEach(num => {
+        const p = palaceMap[num] || {};
+        const god = p.god || p.shen || '-';
+        const star = p.star || p.tianxing || '-';
+        const door = p.door || p.men || '-';
+        const tianGan = p.tianGan || p.tianpan || '-';
+        const diGan = p.diGan || p.dipan || '-';
+
+        gridHtml += `
+          <div class="qimen-palace">
+            <span class="palace-num">${num}</span>
+            <div class="palace-god">${god}</div>
+            <div class="palace-star">${star}</div>
+            <div class="palace-door">${door}</div>
+            <div class="palace-stem">
+              天盘：${tianGan}<br>
+              <span class="palace-dipan">地盘：${diGan}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      const infoItems = [
+        { label: '四柱', value: info.sizhu || info.fourPillars || '-' },
+        { label: '节气', value: info.jieqi || info.solarTerm || '-' },
+        { label: '阴阳遁', value: info.yinyang || info.dun || '-' },
+        { label: '局数', value: info.jushu ? `${info.jushu}局` : (info.ju ? `${info.ju}局` : '-') },
+        { label: '值符', value: info.zhifu || '-' },
+        { label: '值使', value: info.zhishi || '-' },
+        { label: '旬首', value: info.xunshou || '-' },
+        { label: '空亡', value: info.kongwang || '-' }
+      ];
+
+      let infoHtml = '';
+      infoItems.forEach(item => {
+        if (item.value && item.value !== '-') {
+          infoHtml += `
+            <div class="qimen-info-item">
+              <div class="label">${item.label}</div>
+              <div class="value">${item.value}</div>
+            </div>`;
+        }
+      });
+
+      container.innerHTML = `
+        <div class="card result-card">
+          <div class="result-header">
+            <h3>奇门遁甲排盘</h3>
+            <span class="result-badge">时家转盘 · 拆补法</span>
+          </div>
+          ${infoHtml ? `<div class="qimen-info">${infoHtml}</div>` : ''}
+          <div class="qimen-grid">${gridHtml}</div>
+          <div class="interp-text" style="margin-top:16px">
+            <strong>说明：</strong>九宫格按洛书顺序排列。每宫显示八神、九星、八门、天盘干与地盘干。
+            奇门遁甲为古代术数，排盘结果仅作文化研究与娱乐参考。
+          </div>
+        </div>
+      `;
+    }
+
+    /* ============================================================
+       标签切换
+       ============================================================ */
+    document.querySelectorAll('.div-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.div-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.div-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        const panelId = 'panel-' + tab.dataset.panel;
+        document.getElementById(panelId).classList.add('active');
+      });
+    });
+
+    /* ============================================================
+       动态 / 留言 / 主题
+       ============================================================ */
+    function load(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+      catch (_) { return fallback; }
+    }
+
+    let posts = load(STORAGE_POSTS, seedPosts);
+    let guests = load(STORAGE_GUESTS, []);
+
+    function save() {
+      localStorage.setItem(STORAGE_POSTS, JSON.stringify(posts));
+      localStorage.setItem(STORAGE_GUESTS, JSON.stringify(guests));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function relativeTime(ts) {
+      const mins = Math.floor((Date.now() - ts) / 60000);
+      if (mins < 1) return '刚刚';
+      if (mins < 60) return `${mins} 分钟前`;
+      const h = Math.floor(mins / 60);
+      if (h < 24) return `${h} 小时前`;
+      const d = Math.floor(h / 24);
+      if (d < 30) return `${d} 天前`;
+      return new Date(ts).toLocaleDateString('zh-CN');
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+    function observeReveals() {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
+    }
+
+    function renderFeed() {
+      const feed = document.getElementById('feed');
+      if (!feed) return;
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const visible = posts
+        .filter(p => !q || p.text.toLowerCase().includes(q))
+        .sort((a, b) => b.created - a.created);
+
+      if (!visible.length) {
+        feed.innerHTML = '<div class="card post"><div class="empty-state">没有找到相关动态。</div></div>';
+      } else {
+        feed.innerHTML = visible.map(p => `
+          <article class="card post reveal" data-id="${p.id}">
+            <div class="post-head">
+              <div class="post-user">
+                <div class="mini-avatar">${escapeHtml(profile.avatarText)}</div>
+                <div>
+                  <div class="post-name">${escapeHtml(profile.name)}</div>
+                  <div class="post-meta">${relativeTime(p.created)} · ${escapeHtml(p.mood)} 公开</div>
+                </div>
+              </div>
+              <button class="post-menu" title="删除这条动态" onclick="deletePost('${p.id}')">···</button>
+            </div>
+            <div class="post-text">${escapeHtml(p.text)}</div>
+            <div><span class="tag">#个人动态</span><span class="tag">#${escapeHtml(p.mood)}</span></div>
+            <div class="post-actions">
+              <button class="action ${p.liked ? 'active' : ''}" onclick="toggleLike('${p.id}')">${p.liked ? '♥' : '♡'} ${p.likes}</button>
+              <button class="action" onclick="addComment('${p.id}')">💬 ${p.comments.length || 0} 留言</button>
+              <button class="action" onclick="copyPost('${p.id}')">↗ 分享</button>
+            </div>
+            ${p.comments.length ? `<div class="comments">${p.comments.slice(-4).map(c => `<div class="comment"><b>访客</b>${escapeHtml(c)}</div>`).join('')}</div>` : ''}
+          </article>
+        `).join('');
+      }
+      document.getElementById('postCount').textContent = posts.length;
+      observeReveals();
+    }
+
+    window.toggleLike = function(id) {
+      const p = posts.find(x => x.id === id); if (!p) return;
+      p.liked = !p.liked; p.likes += p.liked ? 1 : -1;
+      save(); renderFeed();
+    };
+
+    window.addComment = function(id) {
+      const p = posts.find(x => x.id === id); if (!p) return;
+      const text = prompt('写一句留言：');
+      if (!text || !text.trim()) return;
+      p.comments.push(text.trim().slice(0, 120));
+      save(); renderFeed();
+    };
+
+    window.deletePost = function(id) {
+      const p = posts.find(x => x.id === id); if (!p) return;
+      if (!confirm('确定删除这条动态吗？')) return;
+      posts = posts.filter(x => x.id !== id);
+      save(); renderFeed();
+    };
+
+    window.copyPost = async function(id) {
+      const p = posts.find(x => x.id === id); if (!p) return;
+      const text = `${profile.name}的动态：${p.text}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('动态文字已复制，可以发给朋友啦。');
+      } catch (_) {
+        prompt('复制下面的内容：', text);
+      }
+    };
+
+    document.getElementById('publishBtn').addEventListener('click', () => {
+      const text = document.getElementById('postText').value.trim();
+      if (!text) { document.getElementById('postText').focus(); return; }
+      posts.push({
+        id: crypto.randomUUID(),
+        text: text.slice(0, 500),
+        mood: document.getElementById('postMood').value,
+        likes: 0, liked: false, comments: [],
+        created: Date.now()
+      });
+      save();
+      document.getElementById('postText').value = '';
+      renderFeed();
+      document.getElementById('moments').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', renderFeed);
+
+    document.getElementById('guestBtn').addEventListener('click', () => {
+      const name = document.getElementById('guestName').value.trim();
+      const text = document.getElementById('guestText').value.trim();
+      if (!name || !text) { alert('请先填写昵称和留言。'); return; }
+      guests.unshift({
+        id: crypto.randomUUID(),
+        name: name.slice(0, 20),
+        text: text.slice(0, 120),
+        created: Date.now()
+      });
+      document.getElementById('guestName').value = '';
+      document.getElementById('guestText').value = '';
+      save(); renderGuests();
+    });
+
+    function renderGuests() {
+      const guestCountEl = document.getElementById('guestCount');
+      const guestListEl = document.getElementById('guestList');
+      if (!guestCountEl || !guestListEl) return;
+      guestCountEl.textContent = guests.length;
+      guestListEl.innerHTML = guests.length
+        ? guests.slice(0, 8).map(g => `
+            <div class="guest-item">
+              <strong>${escapeHtml(g.name)}</strong>
+              <span>${relativeTime(g.created)}</span>
+              <p>${escapeHtml(g.text)}</p>
+            </div>`).join('')
+        : '<div class="empty-state">还没有留言，成为第一个留言的人吧。</div>';
+    }
+
+    function updateDays() {
+      const start = new Date(`${START_DATE}T00:00:00`);
+      const today = new Date();
+      const diff = Math.max(1, Math.floor((today - start) / 86400000) + 1);
+      document.getElementById('daysOnline').textContent = diff;
+    }
+
+    function updateClock() {
+      document.getElementById('clock').textContent = new Intl.DateTimeFormat('zh-CN', {
+        dateStyle: 'medium', timeStyle: 'medium'
+      }).format(new Date());
+    }
+
+    const storedTheme = localStorage.getItem(STORAGE_THEME);
+    if (storedTheme === 'light') document.body.classList.add('light');
+    const themeBtn = document.getElementById('themeBtn');
+    themeBtn.textContent = document.body.classList.contains('light') ? '☾' : '☀';
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      const isLight = document.body.classList.contains('light');
+      localStorage.setItem(STORAGE_THEME, isLight ? 'light' : 'dark');
+      themeBtn.textContent = isLight ? '☾' : '☀';
+    });
+
+    const topbar = document.getElementById('topbar');
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      topbar.classList.toggle('scrolled', scrollY > 20);
+      backTop.style.display = scrollY > 500 ? 'grid' : 'none';
+    });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ============================================================
+       初始化
+       ============================================================ */
+    // 恢复登录状态
+    if (sessionStorage.getItem('gh_admin') === '1') {
+      adminBtn.textContent = '✎';
+      adminBtn.classList.add('unlocked');
+    }
+
+    applyProfile();
+    renderGuests();
+    updateDays();
+    updateClock();
+    observeReveals();
+
+    useNowTime();
+    useQimenNow();
+
+    setInterval(updateClock, 1000);
+    setInterval(updateDays, 60 * 60 * 1000);
+  </script>
 </body>
 </html>
